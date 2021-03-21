@@ -22,5 +22,4 @@ ifcgraph.draw_graph(SG)
 
 Output:
 
-![image](ifcgraph_wall.png)
-
+![image](https://user-images.githubusercontent.com/48138129/111918298-bb711a80-8a84-11eb-82c5-52cde13038e3.png)
