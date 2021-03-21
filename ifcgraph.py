@@ -13,7 +13,6 @@ def add_to_graph(existing, new, G):
 def is_entity_instance(val):
     return val.id() != 0 and isinstance(val, ifcopenshell.entity_instance)
 
-
 def create_graph(ifc_file):
     G = nx.DiGraph()
     for entity in ifc_file:
@@ -31,7 +30,6 @@ def create_graph(ifc_file):
     return G
 
 
-
 if __name__ == "__main__":
 
     fn = sys.argv[1]
@@ -45,8 +43,12 @@ if __name__ == "__main__":
     print("--- %s seconds ---" % (time.time() - start_time))
 
     pos = nx.spring_layout(G, k=0.8, iterations=60)  # positions for all nodes
-    nc = nx.draw_networkx_nodes(G, pos,nodelist=G.nodes,node_size=50)
-    nc = nx.draw_networkx_edges(G, pos,nodelist=G.edges,node_size=50)
-  
+    nn = nx.draw_networkx_nodes(G, pos,nodelist=G.nodes,node_size=500)
+    ne = nx.draw_networkx_edges(G, pos,nodelist=G.edges)
+
+    # import pdb; pdb.set_trace()
+
+    #nx.draw_networkx_labels(G, pos, labels, font_size=16)
+
     plt.axis("off")
     plt.show()
