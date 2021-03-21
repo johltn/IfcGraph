@@ -98,21 +98,33 @@ def get_hashes():
 def get_subgraph(node, G):
     neighbors = nx.all_neighbors(G,node) 
     sg = nx.DiGraph()
+    sg.add_node(node, **G.nodes[node])
+
     for n in neighbors:
         print(n)
+        # import pdb; pdb.set_trace()
         print(G.has_edge(node, n))
+        sg.add_node(n,**G.nodes[n] )
         if G.has_edge(node, n):
             sg.add_edge(node, n)
         else:
+            
             sg.add_edge(n, node)
     return sg
 
 def draw_graph(G):
-    pos = nx.spring_layout(G, k=0.8, iterations=60)  # positions for all nodes
-    nn = nx.draw_networkx_nodes(G, pos,nodelist=G.nodes,node_size=500)
+    # import pdb; pdb.set_trace()
+    labels = {}
+    for n in G.nodes.values():
+        print(n)
+        labels[n['id']] = "#" + str(n['id'])+"\n" + n['type']
+ 
+    pos = nx.spring_layout(G, k=0.8, iterations=30)  # positions for all nodes
+    nn = nx.draw_networkx_nodes(G, pos,nodelist=G.nodes,node_size=20)
     ne = nx.draw_networkx_edges(G, pos,edgelist=G.edges)
-
-    # nx.draw_networkx_labels(G, pos, labels, font_size=16)
+    #nl = nx.draw_networkx_labels(G, pos, labels=labels, font_size=16)
+    #labels = nx.draw_networkx_labels(G, pos=pos)
+    labels  = nx.draw_networkx_labels(G, pos, labels=labels, verticalalignment='bottom', font_size=8)
 
     plt.axis("off")
     plt.show()
@@ -127,8 +139,10 @@ if __name__ == "__main__":
     G = create_graph(ifc_file)        
     print("--- %s seconds ---" % (time.time() - start_time))
     
-    sg = get_subgraph(302, G)
+    sg = get_subgraph(23974, G)
 
+    #import pdb; pdb.set_trace()
+    
     draw_graph(sg)
 
  
