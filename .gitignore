@@ -1,2 +1,3 @@
 ifcopenshell
 *.ifc
+__pycache__

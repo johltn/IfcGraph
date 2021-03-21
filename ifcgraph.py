@@ -73,9 +73,7 @@ def create_graph(ifc_file):
     for entity in ifc_file:
         info = entity.get_info()
         G.add_node(info['id'], **info)
-
-        # import pdb; pdb.set_trace()
-       
+        
         for attr_name, attr_val in info.items():
             if isinstance(attr_val, ifcopenshell.entity_instance):
                 if attr_val.id() != 0:
@@ -91,7 +89,6 @@ def get_hashes():
     hashes = set()
     for k,v in G.nodes.items():
         attrs = fuzzy_dict(remove_id_key(v))
-        # print(attrs)
         hashes.add(attrs)
         return hashes
 
@@ -101,30 +98,33 @@ def get_subgraph(node, G):
     sg.add_node(node, **G.nodes[node])
 
     for n in neighbors:
-        print(n)
-        # import pdb; pdb.set_trace()
-        print(G.has_edge(node, n))
         sg.add_node(n,**G.nodes[n] )
         if G.has_edge(node, n):
             sg.add_edge(node, n)
         else:
-            
             sg.add_edge(n, node)
     return sg
 
 def draw_graph(G):
-    # import pdb; pdb.set_trace()
     labels = {}
     for n in G.nodes.values():
         print(n)
         labels[n['id']] = "#" + str(n['id'])+"\n" + n['type']
- 
+        #labels[n['id']] = str(n['id'])
+    cm = [] 
+    for n in G.nodes.values():
+        cm.append('white')
+    
+    edges_labels = {}
+    for e in G.edges().keys():
+        edges_labels[e] = "Attribute"
+    
     pos = nx.spring_layout(G, k=0.8, iterations=30)  # positions for all nodes
-    nn = nx.draw_networkx_nodes(G, pos,nodelist=G.nodes,node_size=20)
-    ne = nx.draw_networkx_edges(G, pos,edgelist=G.edges)
-    #nl = nx.draw_networkx_labels(G, pos, labels=labels, font_size=16)
-    #labels = nx.draw_networkx_labels(G, pos=pos)
-    labels  = nx.draw_networkx_labels(G, pos, labels=labels, verticalalignment='bottom', font_size=8)
+    pos = nx.spring_layout(G, k=0.6, iterations=20)
+    nn = nx.draw_networkx_nodes(G, pos,nodelist=G.nodes,node_color=cm,node_size=75, node_shape='p',alpha=1)
+    ne = nx.draw_networkx_edges(G, pos,edgelist=G.edges,arrows=True, alpha=0.1)
+    edgelabels  = nx.draw_networkx_edge_labels(G, pos, edge_labels=edges_labels)
+    labels  = nx.draw_networkx_labels(G, pos, labels=labels, verticalalignment='top', font_size=10)
 
     plt.axis("off")
     plt.show()
@@ -135,15 +135,10 @@ if __name__ == "__main__":
     fn = sys.argv[1]
     ifc_file = ifcopenshell.open(fn)
 
-    start_time = time.time()
     G = create_graph(ifc_file)        
-    print("--- %s seconds ---" % (time.time() - start_time))
-    
-    sg = get_subgraph(23974, G)
+    SG = get_subgraph(23946, G)
 
-    #import pdb; pdb.set_trace()
-    
-    draw_graph(sg)
+    draw_graph(SG)
 
  
     
