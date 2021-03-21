@@ -1,5 +1,7 @@
 # IfcGraph
 
+Use Networkx to manipulate an IFC file as a directed graph.
+
 
 ```python
 #graph.py
