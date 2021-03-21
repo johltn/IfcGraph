@@ -20,4 +20,3 @@ ifcgraph.draw_graph(SG)
 ```
 ![alt text](ifcgraph_wall.png)
 ```
-
