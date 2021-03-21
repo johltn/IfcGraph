@@ -17,6 +17,10 @@ SG = ifcgraph.get_subgraph(23946, G)
 ifcgraph.draw_graph(SG)
 ```
 
-```
-![alt text](ifcgraph_wall.png)
-```
+`python graph.py input.ifc`
+
+
+Output:
+
+![image](ifcgraph_wall.png)
+
