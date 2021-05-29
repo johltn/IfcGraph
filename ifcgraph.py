@@ -113,17 +113,17 @@ def draw_graph(G):
         #labels[n['id']] = str(n['id'])
     cm = [] 
     for n in G.nodes.values():
-        cm.append('white')
+        cm.append('yellow')
     
     edges_labels = {}
     for e in G.edges().keys():
         edges_labels[e] = "Attribute"
     
     pos = nx.spring_layout(G, k=0.8, iterations=30)  # positions for all nodes
-    pos = nx.spring_layout(G, k=0.6, iterations=20)
-    nn = nx.draw_networkx_nodes(G, pos,nodelist=G.nodes,node_color=cm,node_size=75, node_shape='p',alpha=1)
+    pos = nx.spring_layout(G, k=0.6, iterations=10)
+    nn = nx.draw_networkx_nodes(G, pos,nodelist=G.nodes,node_color=cm,node_size=800, node_shape='o')
     ne = nx.draw_networkx_edges(G, pos,edgelist=G.edges,arrows=True, alpha=0.1)
-    edgelabels  = nx.draw_networkx_edge_labels(G, pos, edge_labels=edges_labels)
+    edgelabels  = nx.draw_networkx_edge_labels(G, pos, edge_labels=edges_labels, font_size=5)
     labels  = nx.draw_networkx_labels(G, pos, labels=labels, verticalalignment='top', font_size=10)
 
     plt.axis("off")
@@ -135,9 +135,11 @@ if __name__ == "__main__":
     fn = sys.argv[1]
     ifc_file = ifcopenshell.open(fn)
 
-    G = create_graph(ifc_file)        
-    SG = get_subgraph(23946, G)
+    G = create_graph(ifc_file)   
+    sorted = list(reversed(list(nx.topological_sort(G))))
+    import pdb; pdb.set_trace()
 
+    SG = get_subgraph(23946, G)
     draw_graph(SG)
 
  
