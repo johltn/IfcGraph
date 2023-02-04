@@ -53,9 +53,9 @@ class fuzzy_dict(object):
         return True
 
 
-def add_to_graph(existing, new, G):
+def add_to_graph(existing, new, edge_label, G):
     G.add_node(new.id(), **new.get_info())
-    G.add_edge(existing.id(), new.id(), weight=7)
+    G.add_edge(existing.id(), new.id(), weight=7, edge_label=edge_label)
 
 def is_entity_instance(val):
     return val.id() != 0 and isinstance(val, ifcopenshell.entity_instance)
@@ -77,12 +77,12 @@ def create_graph(ifc_file):
         for attr_name, attr_val in info.items():
             if isinstance(attr_val, ifcopenshell.entity_instance):
                 if attr_val.id() != 0:
-                    add_to_graph(entity,attr_val, G)
+                    add_to_graph(entity, attr_val, attr_name, G)
             elif isinstance(attr_val, tuple):
                 for element in attr_val:
                     if isinstance(element, ifcopenshell.entity_instance):
                         if element.id() != 0:
-                            add_to_graph(entity,element, G)
+                            add_to_graph(entity, element, attr_name, G)
     return G
 
 def get_hashes():
@@ -98,28 +98,27 @@ def get_subgraph(node, G):
     sg.add_node(node, **G.nodes[node])
 
     for n in neighbors:
-        sg.add_node(n,**G.nodes[n] )
+        sg.add_node(n,**G.nodes[n])
         if G.has_edge(node, n):
-            sg.add_edge(node, n)
+            sg.add_edge(node, n, edge_label=G.get_edge_data(node, n)['edge_label'])
         else:
-            sg.add_edge(n, node)
+            sg.add_edge(n, node, edge_label=G.get_edge_data(n, node)['edge_label'])
+
     return sg
 
 def draw_graph(G):
     labels = {}
     for n in G.nodes.values():
-        print(n)
         labels[n['id']] = "#" + str(n['id'])+"\n" + n['type']
-        #labels[n['id']] = str(n['id'])
     cm = [] 
     for n in G.nodes.values():
-        cm.append('yellow')
+        cm.append((1,1,0.8))
     
     edges_labels = {}
-    for e in G.edges().keys():
-        edges_labels[e] = "Attribute"
-    
-    pos = nx.spring_layout(G, k=0.8, iterations=30)  # positions for all nodes
+    for e in G.edges().data():
+        edges_labels[(e[0],e[1])] = e[2]["edge_label"]
+
+
     pos = nx.spring_layout(G, k=0.6, iterations=10)
     nn = nx.draw_networkx_nodes(G, pos,nodelist=G.nodes,node_color=cm,node_size=800, node_shape='o')
     ne = nx.draw_networkx_edges(G, pos,edgelist=G.edges,arrows=True, alpha=0.1)
@@ -137,8 +136,7 @@ if __name__ == "__main__":
 
     G = create_graph(ifc_file)   
     sorted = list(reversed(list(nx.topological_sort(G))))
-    import pdb; pdb.set_trace()
-
+   
     SG = get_subgraph(23946, G)
     draw_graph(SG)
 
