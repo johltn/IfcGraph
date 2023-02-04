@@ -119,10 +119,10 @@ def draw_graph(G):
         edges_labels[(e[0],e[1])] = e[2]["edge_label"]
 
 
-    pos = nx.spring_layout(G, k=0.6, iterations=10)
-    nn = nx.draw_networkx_nodes(G, pos,nodelist=G.nodes,node_color=cm,node_size=800, node_shape='o')
+    pos = nx.spring_layout(G, k=0.6, iterations=3)
+    nn = nx.draw_networkx_nodes(G, pos,nodelist=G.nodes,node_color=cm,node_size=80, node_shape='o')
     ne = nx.draw_networkx_edges(G, pos,edgelist=G.edges,arrows=True, alpha=0.1)
-    edgelabels  = nx.draw_networkx_edge_labels(G, pos, edge_labels=edges_labels, font_size=5)
+    edgelabels  = nx.draw_networkx_edge_labels(G, pos, edge_labels=edges_labels, font_size=10)
     labels  = nx.draw_networkx_labels(G, pos, labels=labels, verticalalignment='top', font_size=10)
 
     plt.axis("off")
@@ -137,7 +137,7 @@ if __name__ == "__main__":
     G = create_graph(ifc_file)   
     sorted = list(reversed(list(nx.topological_sort(G))))
    
-    SG = get_subgraph(23946, G)
+    SG = get_subgraph(3309, G)
     draw_graph(SG)
 
  
