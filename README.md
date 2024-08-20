@@ -8,6 +8,7 @@ Use Networkx to manipulate an IFC file as a directed graph.
 
 import ifcopenshell
 import ifcgraph
+import networkx as nx
 import sys
 
 fn = sys.argv[1]
